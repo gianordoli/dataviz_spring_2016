@@ -27,12 +27,31 @@
                 color: #333;
             }
 
+            /* Tooltip */
             .d3-tip {
               font-size: 10px;
               padding: 8px;
               background: rgba(0, 0, 0, 0.8);
               color: #fff;
             }
+
+            /* Creates a small triangle extender for the tooltip */
+            .d3-tip:after {
+              display: inline;
+              width: 100%;
+              line-height: 10px;
+              color: rgba(0, 0, 0, 0.8);
+              content: "\25BC";
+              position: absolute;
+              text-align: center;
+            }
+
+            /* Style northward tooltips differently */
+            .d3-tip.n:after {
+              margin: -1px 0 0 0;
+              top: 100%;
+              left: 0;
+            }   
 
         </style>
     </head>
@@ -153,7 +172,7 @@
                         // Need to send the d to the function!
                         tip.show(d);
                     })
-                    .on('mouseout', function(){
+                    .on('mouseout', function(d, i){
                         d3.select(this)
                         .classed('selected', false)
                         ;
