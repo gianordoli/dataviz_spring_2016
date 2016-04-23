@@ -14,8 +14,7 @@ B) Mongo Setup
 
 /*-------------------- MODULES --------------------*/
 // Load the mongodb module
-var	MongoClient = require('mongodb').MongoClient,
-		assert	= require('assert');
+var	MongoClient = require('mongodb').MongoClient;
 
 // Data
 var myShows = [
