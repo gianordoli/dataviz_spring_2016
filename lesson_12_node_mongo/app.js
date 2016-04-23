@@ -15,6 +15,7 @@ B) Mongo Setup
 /*-------------------- MODULES --------------------*/
 // Load the mongodb module
 var	MongoClient = require('mongodb').MongoClient;
+var db;
 
 // Data
 var myShows = [
@@ -55,36 +56,35 @@ initMongo();
 // 0. Connect
 function initMongo(){
 	// 0.1 localhost:mongoDbPort/dbsName
-	MongoClient.connect('mongodb://localhost:27017/tvshows', function(err, db) {
+	MongoClient.connect('mongodb://localhost:27017/tvshows', function(err, _db) {
 		// 0.2 Will return two objects: err and db
-		// we'll make operations on db, if successfully connected
+		// we'll make operations on db if successfully connected
 		if(err === null){
 			console.log("Connected correctly to server");
+
+			db = _db;
 
 			// CRUD: Create, Read, Update, Delete
 
 			// 1. Create
 			// 1.1 db was returned by the connect function
-			// whatever operation we call outside of here, we need to pass it along
-			// Let's close() from within the external function,
-			// otherwise js will reach the close() here before performing the insert()
 			
-			// createSingleRecord(db, myShows[2]);			
-			// createManyRecords(db, myShows);
+			// createSingleRecord(myShows[2]);			
+			// createManyRecords(myShows);
 			
 			// 2. Read
 			// 2.1 No query
-			// readRecords(db);
+			readRecords();
 			
 			// 2.2 With query
 			// Equals to
-			// readRecords(db, {'number_of_seasons': 5});
+			// readRecords({'number_of_seasons': 5});
 
 			// Greater than
-			// readRecords(db, {'year': {'$gte': 2011}});
+			// readRecords({'year': {'$gte': 2011}});
 
 			// AND conditionals
-			// readRecords(db,
+			// readRecords(
 			// 	{
 			// 		'number_of_seasons': {'$gte': 5},
 			// 		'channel': 'AMC',
@@ -93,7 +93,7 @@ function initMongo(){
 			// );
 
 			// OR conditionals
-			// readRecords(db,
+			// readRecords(
 			// 	{'$or':
 			// 		[
 			// 			{'number_of_seasons': {'$gte': 5}},
@@ -104,13 +104,13 @@ function initMongo(){
 			// );	
 
 			// 3. Update
-			// updateRecords(db,
+			// updateRecords(
 			// 	{'channel': 'AMC'},
 			// 	{'$set': {'channel': 'ABC'}
 			// });
 
 			// 4. Delete
-			deleteRecords(db, {'number_of_seasons': 7});
+			// deleteRecords({'number_of_seasons': 7});
 
 			// 0.3 Always remember to close the connection
 			// db.close();
@@ -121,7 +121,7 @@ function initMongo(){
 };
 
 // // 1.2
-function createSingleRecord(db, newRecord){
+function createSingleRecord(newRecord){
 	console.log('Called createSingleRecord');
 
 	// db is being passed by the initMongo function
@@ -135,12 +135,12 @@ function createSingleRecord(db, newRecord){
 	    	}else{
 				console.log(err);
 	    	}
-	    	db.close();
+	    	// db.close();
 	});
 }
 
 // 1.3 Modifying the function so we can save more than one record
-function createManyRecords(db, newRecords){
+function createManyRecords(newRecords){
 	console.log('Called createManyRecords');
 	db.collection('records').insert(
 		newRecords,
@@ -150,29 +150,30 @@ function createManyRecords(db, newRecords){
 	    	}else{
 				console.log(err);
 	    	}
-	    	db.close();
+	    	// db.close();
 	});
 }
 
 // 2.1
-function readRecords(db, query){
+function readRecords(query){
 	console.log('Called readRecords.');
+
 	// Meaning: If query === undefined, query = {}
 	// else, query keeps the same
 	query = query || {};
 	// console.log(query);
-	db.collection('records').find(query).toArray(function(err, docs){
+	db.collection('records').find(query).toArray(function(err, _docs){
 	    	if(err === null){
 	    		console.log(docs);
 	    	}else{
 				console.log(err);
 	    	}
-	    	db.close();
+	    	// db.close();
 	});
 }
 
 // 3.1
-function updateRecords(db, query, update){
+function updateRecords(query, update){
 	console.log('Called updateRecords.');
 
 	query = query || {};
@@ -189,12 +190,12 @@ function updateRecords(db, query, update){
 	    	}else{
 				console.log(err);
 	    	}
-    	db.close();
+    	// db.close();
 	});
 }
 
 // 4.1 Delete
-function deleteRecords(db, query){
+function deleteRecords(query){
 	console.log('Called deleteRecords.');
 
 	query = query || {};
@@ -208,6 +209,6 @@ function deleteRecords(db, query){
 	    	}else{
 				console.log(err);
 	    	}
-    	db.close();
+    	// db.close();
 	});
 }
